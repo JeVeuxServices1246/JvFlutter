@@ -2,6 +2,7 @@ import 'package:country_calling_code_picker/picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:jv_app/app/modules/user/auth/login/controller/login_controller.dart';
 import 'package:jv_app/app/routers/my_router.dart';
 import 'package:jv_app/resources/app_assets.dart';
@@ -77,15 +78,16 @@ class UserLoginScreen extends GetView<LoginController> {
                             topRight: Radius.circular(40),
                             topLeft: Radius.circular(40))),
                     child: Container(
-                      padding: const EdgeInsets.only(top: 60, left: 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.only(left: 20, right: 5),
+                      padding: const EdgeInsets.only(top:40, left: 20, right: 5),
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left:15,right:15),
+                          child: Form(
+                            key:controller.loginKey,
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text(AppStrings.PersonalInfo,
+                                Text(AppStrings.loginInfo,
                                     textAlign: TextAlign.start,
                                     style: GoogleFonts.roboto(
                                       textStyle: const TextStyle(
@@ -95,134 +97,101 @@ class UserLoginScreen extends GetView<LoginController> {
                                       ),
                                     )),
                                 const SizedBox(
-                                  height: 40,
+                                  height:30,
                                 ),
-                                GestureDetector(
-                                  onTap: () => controller.selectCountryCode(),
-                                  child: Obx(
-                                    () => Row(
-                                      children: <Widget>[
-                                        Image.asset(
-                                          controller.selectedCountry.value.flag,
-                                          package: countryCodePackageName,
-                                          width: 30,
-                                        ),
-                                        const SizedBox(
-                                          height: 16,
-                                          width: 10,
-                                        ),
-                                        Text(
-                                            ' ${controller.selectedCountry.value.name}${" (${controller.selectedCountry.value.callingCode})"} ',
-                                            textAlign: TextAlign.center,
-                                            style: GoogleFonts.roboto(
-                                              textStyle: const TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 17,
-                                                color: Colors.black,
-                                              ),
-                                            )),
-                                      ],
-                                    ),
+                                IntlPhoneField(
+                                  decoration: const InputDecoration(
+                                    labelText: 'Phone Number',
                                   ),
+                                  controller:controller.mobileController,
+                                  textInputAction: TextInputAction.done,
+                                  initialCountryCode: 'CA',
+                                  onCountryChanged: (country) {
+                                    controller.dialCode.value = country.dialCode;
+                                    controller.countryName.value = country.name;
+                                  },
+                                  onChanged: (phone) {
+                                  },
                                 ),
                                 const SizedBox(
                                   height: 10,
                                 ),
-                                Container(
-                                  padding:
-                                      const EdgeInsets.only(left: 0, right: 25),
-                                  child: const Divider(
-                                    height: 5,
-                                    thickness: 1,
-                                    color: Color(0xffACACAC),
+                                Obx(() => TextFormField(
+                                  maxLength:6,
+                                  controller: controller.passController,
+                                  obscureText: controller.passenable.value,
+                                  keyboardType: TextInputType.name,
+                                  textInputAction: TextInputAction.done,
+                                  validator: (val){
+                                    if(val!.isEmpty) {
+                                      return strEmptyPassword;
+                                    }
+                                    return null;
+                                  },
+                                  decoration:InputDecoration(
+                                      hintText: 'Password',
+                                      suffixIcon: IconButton(onPressed: (){ //add Icon button at end of TextField
+                                        if(controller.passenable.value){ //if viewModel.passenable == true, make it false
+                                          controller.passenable.value= false;
+                                        }else{
+                                          controller.passenable.value = true; //if viewModel.passenable == false, make it true
+                                        }
+                                      }, icon: Icon(controller.passenable == true?Icons.visibility_off_outlined:Icons.remove_red_eye_outlined,color:AppColors.blackColor,))
+                                  ),
+                                ),),
+                                const SizedBox(
+                                  height: 45,
+                                ),
+                                InkWell(
+                                  onTap: () => Get.toNamed(MyRouter.signupScreen),
+                                  child: Text(
+                                    'Registration',
+                                    style: GoogleFonts.roboto(
+                                        textStyle: const TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 14,
+                                          color: AppColors.blackColor,
+                                        )),
                                   ),
                                 ),
                                 const SizedBox(
-                                  height: 17,
+                                  height: 15,
                                 ),
                                 Container(
-                                  padding:
-                                      const EdgeInsets.only(left: 0, right: 25),
-                                  child: TextFormField(
-                                    keyboardType:
-                                        const TextInputType.numberWithOptions(
-                                            signed: true),
-                                    controller: controller.mobileController,
-                                    obscureText: false,
-                                    decoration: const InputDecoration(
-                                      hintText: 'Your phone number',
-                                    ),
-                                  ),
+                                  padding: const EdgeInsets.only(left: 10, right: 25),
+                                  child: Text(
+                                      'We will send you a verification \n code to your phone number',
+                                      textAlign: TextAlign.center,
+                                      style: GoogleFonts.roboto(
+                                        textStyle: const TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 14,
+                                          color: Color(0xffB4B4B4),
+                                        ),
+                                      )),
                                 ),
                                 const SizedBox(
-                                  height: 17,
+                                  height: 25,
                                 ),
-                                Container(
-                                  padding:
-                                      const EdgeInsets.only(left: 0, right: 25),
-                                  child: TextFormField(
-                                    keyboardType: TextInputType.text,
-                                    controller: controller.passwordController,
-                                    obscureText: false,
-                                    decoration: const InputDecoration(
-                                      hintText: 'password',
+                                GestureDetector(
+                                  onTap: () {
+                                    if(controller.loginKey.currentState!.validate()){
+                                      controller.signIn();
+                                    }
+                                  },
+                                  child: Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: Image.asset(
+                                      AppAssets.nextOnBoarding,
+                                      height: 50,
+                                      width: 50,
                                     ),
                                   ),
-                                ),
+                                )
                               ],
                             ),
                           ),
-                          const SizedBox(height: 14),
-                          Row(
-                            children: [
-                              const Spacer(),
-                              InkWell(
-                                onTap: () => Get.toNamed(MyRouter.signupScreen),
-                                child: Text(
-                                  'SignUp ?',
-                                  style: GoogleFonts.roboto(
-                                      textStyle: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14,
-                                    color: AppColors.blackColor,
-                                  )),
-                                ),
-                              ),
-                            ],
-                          ).paddingSymmetric(horizontal: 20),
-                          const SizedBox(
-                            height: 35,
-                          ),
-                          Container(
-                            padding: const EdgeInsets.only(left: 10, right: 25),
-                            child: Text(
-                                'We will send you a verification \n code to your phone number',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.roboto(
-                                  textStyle: const TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 17,
-                                    color: Color(0xffB4B4B4),
-                                  ),
-                                )),
-                          ),
-                          const SizedBox(
-                            height: 25,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              controller.signIn();
-                            },
-                            child: Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Image.asset(
-                                AppAssets.nextOnBoarding,
-                                height: 50,
-                                width: 50,
-                              ),
-                            ),
-                          )
-                        ],
+                        ),
                       ),
                     ),
                   ),

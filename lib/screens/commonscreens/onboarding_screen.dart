@@ -98,30 +98,32 @@ class _OnBoardongScreenState extends State<OnBoardongScreen> {
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.only(left: 10, right: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Container(
-                            // color: Colors.blue,
-                            child: Image(
-                              image: const AssetImage(
-                                AppAssets.onBoardingOne,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              // color: Colors.blue,
+                              child: Image(
+                                image: const AssetImage(
+                                  AppAssets.onBoardingOne,
+                                ),
+                                height: 332,
+                                fit: BoxFit.scaleDown,
+                                width: MediaQuery.of(context).size.width,
                               ),
-                              height: 332,
-                              fit: BoxFit.scaleDown,
-                              width: MediaQuery.of(context).size.width,
                             ),
-                          ),
-                          Text(
-                            AppStrings.onBoardingTitleOne,
-                            style: GoogleFonts.inter(
-                                textStyle: const TextStyle(
-                                    height: 1.3,
-                                    color: Color(0xff635C5C),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700)),
-                          ),
-                        ],
+                            Text(
+                              AppStrings.onBoardingTitleOne,
+                              style: GoogleFonts.inter(
+                                  textStyle: const TextStyle(
+                                      height: 1.3,
+                                      color: Color(0xff635C5C),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700)),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     Padding(

@@ -15,48 +15,39 @@ import 'package:jv_app/app/routers/my_router.dart';
 import 'package:jv_app/utils/helper/exception_helper.dart';
 import 'package:jv_app/utils/loader/loader_utils.dart';
 import 'package:jv_app/utils/storage/storage_utils.dart';
-import 'package:jv_app/utils/validator/validator.dart';
 
 class LoginController extends GetxController {
   static Dio dio = Dio(dioOptions);
   BuildContext context = Get.context!;
-
+  TextEditingController passController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController otpTextController = TextEditingController();
-
+  RxBool _passenable = true.obs;
+  RxString dialCode = "+1".obs;
+  RxString countryName = "Canada".obs;
+  final loginKey = GlobalKey<FormState>();
   RxInt currentOtp = RxInt(0000);
+  RxBool get passenable => _passenable;
+
+  set passenable(RxBool value) {
+    _passenable = value;
+  }
 
   Rx<Country> selectedCountry =
       Rx(Country('Afghanistan', 'flags/afg.png', 'AF', '+93'));
 
   @override
   void onInit() {
-    initCountry();
     super.onInit();
   }
 
   @override
   void dispose() {
     mobileController.clear();
-    passwordController.clear();
+    passController.clear();
     super.dispose();
   }
 
-  void initCountry() async {
-    final Country country = await getDefaultCountry(context);
-    selectedCountry.value = country;
-  }
 
-  void selectCountryCode() async {
-    var country =
-        await Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return const PickerPage();
-    }));
-    if (country != null) {
-      selectedCountry.value = country;
-    }
-  }
 
   // sendOTP() async {
   //   if (Validator.mobileRegex.hasMatch(mobileController.text)) {
@@ -99,49 +90,45 @@ class LoginController extends GetxController {
   // }
 
   signIn() async {
-    if (Validator.mobileRegex.hasMatch(mobileController.text)) {
-      if (passwordController.text.isNotEmpty) {
-        try {
-          LoadingUtils.showLoader();
-          var response = await dio.post(
-            URLs.login,
-            data: UserLoginRequest(
-              phone: mobileController.text,
-              password: passwordController.text,
-            ),
-          );
-          if (response.statusCode == 200) {
-            ApiResponse apiResponse = ApiResponse.fromJson(response.data);
-            if (apiResponse.status) {
-              UserRegistrationResponse data =
-                  UserRegistrationResponse.fromJson(apiResponse.data);
-              Storage.setUser(User(
-                phoneNumber: data.userData?.phoneNumber,
-                firstName: data.userData?.firstName,
-                lastName: data.userData?.lastName,
-                userName: data.userData?.username,
-                isUserLogin: true,
-                token: data.token,
-                userEmail: data.userData?.email,
-              ));
-              LoadingUtils.hideLoader();
-              Get.offAllNamed(MyRouter.homeScreen);
-            } else {
-              LoadingUtils.hideLoader();
-              Fluttertoast.showToast(msg: apiResponse.message);
-            }
+    if (passController.text.isNotEmpty) {
+      try {
+        LoadingUtils.showLoader();
+        var response = await dio.post(
+          URLs.login,
+          data: UserLoginRequest(
+            phone: mobileController.text,
+            password: passController.text,
+          ),
+        );
+        if (response.statusCode == 200) {
+          ApiResponse apiResponse = ApiResponse.fromJson(response.data);
+          if (apiResponse.status) {
+            UserRegistrationResponse data =
+            UserRegistrationResponse.fromJson(apiResponse.data);
+            Storage.setUser(User(
+              phoneNumber: data.userData?.phoneNumber,
+              firstName: data.userData?.firstName,
+              lastName: data.userData?.lastName,
+              userName: data.userData?.username,
+              isUserLogin: true,
+              token: data.token,
+              userEmail: data.userData?.email,
+            ));
+            LoadingUtils.hideLoader();
+            Get.offAllNamed(MyRouter.homeScreen);
           } else {
             LoadingUtils.hideLoader();
+            Fluttertoast.showToast(msg: apiResponse.message);
           }
-        } on DioError catch (exception) {
+        } else {
           LoadingUtils.hideLoader();
-          ExceptionHandler.handleError(exception);
         }
-      } else {
-        Fluttertoast.showToast(msg: 'enter password');
+      } on DioError catch (exception) {
+        LoadingUtils.hideLoader();
+        ExceptionHandler.handleError(exception);
       }
     } else {
-      Fluttertoast.showToast(msg: 'enter valid mobile');
+      Fluttertoast.showToast(msg: 'enter password');
     }
   }
 }

@@ -14,37 +14,32 @@ import 'package:jv_app/app/routers/my_router.dart';
 import 'package:jv_app/utils/helper/exception_helper.dart';
 import 'package:jv_app/utils/loader/loader_utils.dart';
 import 'package:jv_app/utils/storage/storage_utils.dart';
-import 'package:jv_app/utils/validator/validator.dart';
 
 class SignupController extends GetxController {
   static Dio dio = Dio(dioOptions);
+  BuildContext context = Get.context!;
 
   TextEditingController mobileController = TextEditingController();
-  TextEditingController password = TextEditingController();
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  TextEditingController conformPasswordController = TextEditingController();
-  TextEditingController otpController = TextEditingController();
-
-  final registrationFormKey = GlobalKey<FormState>();
-
-  RxInt currentOtp = RxInt(0000);
-
-  RxBool isPasswordVisible = RxBool(false);
-
-  Rx<Country> selectedCountry =
-      Rx(Country('Afghanistan', 'flags/afg.png', 'AF', '+93'));
-
-  void selectCountryCode() async {
-    var country = await Get.to(() => const PickerPage());
-    if (country != null) {
-      selectedCountry.value = country;
-    }
+  TextEditingController passController = TextEditingController();
+  TextEditingController confirmPassController = TextEditingController();
+  RxBool _passenable = true.obs;
+  RxBool _confimPass = true.obs;
+  RxString dialCode = "+1".obs;
+  RxString countryName = "Canada".obs;
+  final signupKey = GlobalKey<FormState>();
+  RxString otp = "".obs;
+  RxInt currentOtp = 0.obs;
+  RxBool get confimPass => _confimPass;
+  set confimPass(RxBool value) {
+    _confimPass = value;
   }
+  RxBool get passenable => _passenable;
 
-  showPassword() {
-    isPasswordVisible.toggle();
+  set passenable(RxBool value) {
+    _passenable = value;
   }
 
   registerUser() async {
@@ -53,7 +48,7 @@ class SignupController extends GetxController {
       var response = await dio.post(URLs.registration,
           data: UserRegistrationRequest(
             phoneNumber: mobileController.text,
-            password: password.text,
+            password: confirmPassController.text,
             firstName: firstNameController.text,
             lastName: lastNameController.text,
             email: emailController.text,
@@ -87,39 +82,29 @@ class SignupController extends GetxController {
   }
 
   sendOTP() async {
-    if (registrationFormKey.currentState!.validate()) {
-      if (Validator.mobileRegex.hasMatch(mobileController.text)) {
-        if (password.text == conformPasswordController.text) {
-          LoadingUtils.showLoader();
-          try {
-            var response = await dio.post(URLs.sentOtp,
-                data: {"phone_number": mobileController.text});
-            if (response.statusCode == 200) {
-              final apiResponse = ApiResponse.fromJson(response.data);
-              if (apiResponse.status == true) {
-                LoadingUtils.hideLoader();
-                currentOtp.value = apiResponse.data['otp'];
-                Get.toNamed(MyRouter.onVerificationScreen);
-              } else {
-                LoadingUtils.hideLoader();
-                Fluttertoast.showToast(msg: apiResponse.message);
-              }
-            } else {
-              Fluttertoast.showToast(msg: 'Something went wrong');
-              LoadingUtils.hideLoader();
-            }
-          } on DioError catch (exception) {
-            if (LoadingUtils.isLoaderShowing) {
-              LoadingUtils.hideLoader();
-            }
-            ExceptionHandler.handleError(exception);
-          }
+    LoadingUtils.showLoader();
+    try {
+      var response = await dio.post(URLs.sentOtp,
+          data: {"phone_number": mobileController.text});
+      if (response.statusCode == 200) {
+        final apiResponse = ApiResponse.fromJson(response.data);
+        if (apiResponse.status == true) {
+          LoadingUtils.hideLoader();
+          currentOtp.value = apiResponse.data['otp'];
+          Get.toNamed(MyRouter.onVerificationScreen);
         } else {
-          Fluttertoast.showToast(msg: 'Password not match');
+          LoadingUtils.hideLoader();
+          Fluttertoast.showToast(msg: apiResponse.message);
         }
       } else {
-        Fluttertoast.showToast(msg: 'Please enter valid number');
+        Fluttertoast.showToast(msg: 'Something went wrong');
+        LoadingUtils.hideLoader();
       }
+    } on DioError catch (exception) {
+      if (LoadingUtils.isLoaderShowing) {
+        LoadingUtils.hideLoader();
+      }
+      ExceptionHandler.handleError(exception);
     }
   }
 
