@@ -155,7 +155,6 @@ class SignUpScreen extends GetView<SignupController> {
                                   height: 10,
                                 ),
                                 Obx(() => TextFormField(
-                                  maxLength:6,
                                   controller: controller.passController,
                                   obscureText: controller.passenable.value,
                                   keyboardType: TextInputType.name,
@@ -163,6 +162,9 @@ class SignUpScreen extends GetView<SignupController> {
                                   validator: (val){
                                     if(val!.isEmpty) {
                                       return strEmptyPassword;
+                                    }
+                                    else if(val.length < 6) {
+                                      return strInvalidPassword;
                                     }
                                     return null;
                                   },
@@ -185,13 +187,15 @@ class SignUpScreen extends GetView<SignupController> {
                                   obscureText: controller.confimPass.value,
                                   keyboardType: TextInputType.name,
                                   textInputAction: TextInputAction.done,
-                                  maxLength:6,
                                   validator: (val){
                                     if(val!.isEmpty) {
                                       return strEmptyPassword;
                                     }
-                                    if(val != controller.passController.text) {
+                                   else if(val != controller.passController.text) {
                                       return 'Not Match';
+                                    }
+                                    else if(val.length < 6) {
+                                      return strInvalidPassword;
                                     }
                                     return null;
                                   },

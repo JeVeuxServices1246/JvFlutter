@@ -72,6 +72,7 @@ class LoginController extends GetxController {
             countryCode: data.userData?.countryCode,
             userEmail: data.userData?.email,
           ));
+          print(Storage.isUserExists());
           LoadingUtils.hideLoader();
           Get.offAllNamed(MyRouter.homeScreen);
         } else {

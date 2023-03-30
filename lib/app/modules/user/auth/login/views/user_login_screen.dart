@@ -118,7 +118,6 @@ class UserLoginScreen extends GetView<LoginController> {
                                   height: 10,
                                 ),
                                 Obx(() => TextFormField(
-                                  maxLength:6,
                                   controller: controller.passController,
                                   obscureText: controller.passenable.value,
                                   keyboardType: TextInputType.name,
@@ -126,6 +125,8 @@ class UserLoginScreen extends GetView<LoginController> {
                                   validator: (val){
                                     if(val!.isEmpty) {
                                       return strEmptyPassword;
+                                    }else if(val.length < 6) {
+                                      return strInvalidPassword;
                                     }
                                     return null;
                                   },

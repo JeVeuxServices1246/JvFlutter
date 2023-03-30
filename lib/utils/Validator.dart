@@ -10,7 +10,7 @@ class Validator {
       "\\d{9}|(?:\\d{3}-){2}\\d{4}|\\(\\d{3}\\)\\d{3}-?\\d{4}";
   static RegExp regexPhone = new RegExp(phonePattern.toString());
 
-  static validateEmail(String value, String errorTextForEmptyField,
+  static validateEmail(String value,
       String errorTextForInvalidField) {
     if (value.isNotEmpty) {
       if (regexEmail.hasMatch(value)) {
@@ -18,8 +18,6 @@ class Validator {
       } else {
         return errorTextForInvalidField;
       }
-    } else {
-      return errorTextForEmptyField;
     }
   }
 
@@ -52,7 +50,7 @@ class Validator {
 
       case Constants.EMAIL_VALIDATION:
         return validateEmail(
-            value, errorTextForEmptyField, errorTextInvalidField);
+            value, errorTextInvalidField);
         break;
 
       case Constants.PHONE_VALIDATION:

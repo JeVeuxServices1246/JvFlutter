@@ -79,11 +79,12 @@ class SignupController extends GetxController {
             firstName: data.userData?.firstName,
             lastName: data.userData?.lastName,
             userName: data.userData?.username,
-            countryCode: data.userData?.countryCode,
+            countryCode: data.userData?.countryCode.toString(),
             token: data.token,
             isUserLogin: true,
           ));
           print("home");
+          print(Storage.isUserExists());
           Get.offAllNamed(MyRouter.homeScreen);
         } else {
           Fluttertoast.showToast(msg:apiResponse.message);
