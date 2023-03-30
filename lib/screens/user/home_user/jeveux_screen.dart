@@ -274,7 +274,7 @@ class _JEveuxScreenState extends State<JEveuxScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AddText(
-              text: "Hi, ${Storage.getUser().lastName ?? 'User'}",
+              text: "Hi, ${Storage.getUser().firstName ?? 'User'}",
               fontSize: 16,
               letterSpacing: 1,
               fontWeight: FontWeight.w500,

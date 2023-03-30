@@ -2,9 +2,9 @@ import 'package:country_calling_code_picker/picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:jv_app/app/modules/user/auth/login/controller/login_controller.dart';
 import 'package:jv_app/app/routers/my_router.dart';
+import 'package:jv_app/phone/intl_phone_field.dart';
 import 'package:jv_app/resources/app_assets.dart';
 import 'package:jv_app/resources/app_theme.dart';
 import 'package:jv_app/resources/strings.dart';
@@ -100,6 +100,7 @@ class UserLoginScreen extends GetView<LoginController> {
                                   height:30,
                                 ),
                                 IntlPhoneField(
+                                  keyboardType: const TextInputType.numberWithOptions(signed: true),
                                   decoration: const InputDecoration(
                                     labelText: 'Phone Number',
                                   ),

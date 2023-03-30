@@ -1,10 +1,11 @@
 import 'package:country_calling_code_picker/picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:jv_app/app/modules/user/auth/signup/controller/signup_controller.dart';
+import 'package:jv_app/phone/intl_phone_field.dart';
 import 'package:jv_app/resources/app_assets.dart';
 import 'package:jv_app/resources/app_theme.dart';
 import 'package:jv_app/resources/strings.dart';

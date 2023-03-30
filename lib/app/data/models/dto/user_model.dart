@@ -12,6 +12,7 @@ class User {
     this.isProvider,
     this.phoneNumber,
     this.token,
+    this.countryCode,
   });
 
   User.fromJson(dynamic json) {
@@ -26,6 +27,7 @@ class User {
     phoneNumber = json['phoneNumber'];
     isProvider = json['isProvider'];
     token = json['token'];
+    countryCode = json['countryCode'];
   }
 
   String? userId;
@@ -34,6 +36,7 @@ class User {
   String? lastName;
   String? token;
   String? userEmail;
+  String? countryCode;
   bool? isUserLogin;
   dynamic authType;
   dynamic profilePicPath;
@@ -53,6 +56,7 @@ class User {
     map['phoneNumber'] = phoneNumber;
     map['isProvider'] = isProvider;
     map['token'] = token;
+    map['countryCode'] = countryCode;
     return map;
   }
 }

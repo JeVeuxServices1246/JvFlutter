@@ -57,7 +57,9 @@ dependencies:
   get_storage: ^2.1.1
   image_picker: ^0.8.7
   permission_handler: ^10.2.0
-  intl_phone_field: ^3.1.0
+  firebase_messaging: ^14.3.0
+  firebase_core: ^2.1.1
+  firebase_core_platform_interface: ^4.5.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -86,6 +88,7 @@ flutter:
     - assets/images/
     - assets/localImages/
     - assets/temp/
+    - assets/flags/
 
   fonts:
     - fonts:

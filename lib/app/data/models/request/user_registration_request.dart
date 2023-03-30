@@ -5,6 +5,7 @@ class UserRegistrationRequest {
     this.firstName,
     this.lastName,
     this.email,
+    this.countrycode,
   });
 
   UserRegistrationRequest.fromJson(dynamic json) {
@@ -13,12 +14,14 @@ class UserRegistrationRequest {
     firstName = json['first_name'];
     lastName = json['last_name'];
     email = json['email'];
+    countrycode = json['country_code'];
   }
   String? phoneNumber;
   String? password;
   String? firstName;
   String? lastName;
   String? email;
+  String? countrycode;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -27,6 +30,7 @@ class UserRegistrationRequest {
     map['first_name'] = firstName;
     map['last_name'] = lastName;
     map['email'] = email;
+    map['country_code'] = countrycode;
     return map;
   }
 }

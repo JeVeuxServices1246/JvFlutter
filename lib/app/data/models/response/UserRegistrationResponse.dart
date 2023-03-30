@@ -29,6 +29,7 @@ class UserData {
     this.firstName,
     this.lastName,
     this.email,
+    this.countryCode,
   });
 
   UserData.fromJson(dynamic json) {
@@ -37,12 +38,14 @@ class UserData {
     firstName = json['first_name'];
     lastName = json['last_name'];
     email = json['email'];
+    countryCode = json['country_code'].toString();
   }
   String? phoneNumber;
   dynamic username;
   String? firstName;
   String? lastName;
   String? email;
+  String? countryCode;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -51,6 +54,7 @@ class UserData {
     map['first_name'] = firstName;
     map['last_name'] = lastName;
     map['email'] = email;
+    map['country_code'] = countryCode;
     return map;
   }
 }
