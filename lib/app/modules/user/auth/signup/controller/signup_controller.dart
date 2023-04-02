@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:country_calling_code_picker/picker.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -8,22 +6,22 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:jv_app/app/data/models/dto/genric_response.dart';
 import 'package:jv_app/app/data/models/dto/user_model.dart';
-import 'package:jv_app/app/data/models/request/user_registration_request.dart';
 import 'package:jv_app/app/data/models/response/UserRegistrationResponse.dart';
 import 'package:jv_app/app/data/values/dio_options.dart';
 import 'package:jv_app/app/data/values/urls.dart';
-import 'package:jv_app/app/modules/user/auth/login/views/user_login_screen.dart';
 import 'package:jv_app/app/modules/user/auth/views/verification_screen.dart';
 import 'package:jv_app/app/routers/my_router.dart';
 import 'package:jv_app/utils/helper/exception_helper.dart';
+import 'package:jv_app/utils/hive_utils.dart';
 import 'package:jv_app/utils/loader/loader_utils.dart';
+import 'package:jv_app/utils/session_key.dart';
 import 'package:jv_app/utils/storage/storage_utils.dart';
 
 class SignupController extends GetxController {
   static Dio dio = Dio(dioOptions);
   BuildContext context = Get.context!;
-  // String ?fcm_token;
-  // final _firebaseMessaging = FirebaseMessaging.instance;
+  String ?fcm_token;
+  final _firebaseMessaging = FirebaseMessaging.instance;
 
   TextEditingController mobileController = TextEditingController();
   TextEditingController firstNameController = TextEditingController();
@@ -37,6 +35,7 @@ class SignupController extends GetxController {
   RxString dialCode = "1".obs;
   RxString countryName = "Canada".obs;
   final signupKey = GlobalKey<FormState>();
+  final upKey = GlobalKey<FormState>();
   RxString otp = "".obs;
   RxInt currentOtp = 0.obs;
   RxBool get confimPass => _confimPass;
@@ -51,7 +50,7 @@ class SignupController extends GetxController {
 
   registerUser() async {
     print("hhh");
-    // _firebaseMessaging.getToken().then((value) {print('Token: $value'); fcm_token = '$value';});
+    _firebaseMessaging.getToken().then((value) {print('Token: $value'); fcm_token = '$value';});
     try {
       LoadingUtils.showLoader();
       print("loader");
@@ -60,10 +59,10 @@ class SignupController extends GetxController {
           "phone_number":mobileController.text.toString(),
           "password":confirmPassController.text.toString(),
           "first_name":firstNameController.text.toString(),
-          "last_name":lastNameController.text.toString(),
-          "email":emailController.text.toString(),
+          "last_name":lastNameController.text.isEmpty?null:lastNameController.text.toString(),
+          "email":emailController.text.isEmpty?null:emailController.text.toString(),
           "country_code":dialCode.toString(),
-          "fcm_id":"123",
+          "fcm_token":fcm_token.toString(),
         },
       );
       if (response.statusCode == 200) {
@@ -73,18 +72,26 @@ class SignupController extends GetxController {
           print("sucess");
           final UserRegistrationResponse data =
               UserRegistrationResponse.fromJson(apiResponse.data);
-          Storage.setUser(User(
-            userEmail: data.userData?.email,
-            phoneNumber: data.userData?.phoneNumber,
-            firstName: data.userData?.firstName,
-            lastName: data.userData?.lastName,
-            userName: data.userData?.username,
-            countryCode: data.userData?.countryCode.toString(),
-            token: data.token,
-            isUserLogin: true,
-          ));
-          print("home");
-          print(Storage.isUserExists());
+          HiveUtils.addSession(SessionKey.isLoggedIn, true);
+          HiveUtils.addSession(SessionKey.firstName, data.userData?.firstName);
+          HiveUtils.addSession(SessionKey.lastname, data.userData?.lastName);
+          HiveUtils.addSession(SessionKey.phonenum, data.userData?.phoneNumber);
+          HiveUtils.addSession(SessionKey.countrycode, data.userData?.countryCode);
+          HiveUtils.addSession(SessionKey.email, data.userData?.email);
+          HiveUtils.addSession(SessionKey.token, data.token);
+          data.userData?.username==null? HiveUtils.addSession(SessionKey.username,""):
+          HiveUtils.addSession(SessionKey.username, data.userData?.username);
+          LoadingUtils.hideLoader();
+          // Storage.setUser(User(
+          //   userEmail: data.userData?.email,
+          //   phoneNumber: data.userData?.phoneNumber,
+          //   firstName: data.userData?.firstName,
+          //   lastName: data.userData?.lastName,
+          //   userName: data.userData?.username,
+          //   countryCode: data.userData?.countryCode.toString(),
+          //   token: data.token,
+          //   isUserLogin: true,
+          // ));
           Get.offAllNamed(MyRouter.homeScreen);
         } else {
           Fluttertoast.showToast(msg:apiResponse.message);
@@ -99,17 +106,25 @@ class SignupController extends GetxController {
     }
   }
 
-  sendOTP() async {
+  sendOTP(bool status) async {
     LoadingUtils.showLoader();
     try {
       var response = await dio.post(URLs.sentOtp,
-          data: {"phone_number": mobileController.text.toString(),"country_code":dialCode.toString()});
+          data: {"phone_number": mobileController.text.toString(),
+                  "country_code":dialCode.toString(),
+                   "forgot_password":status
+          });
       if (response.statusCode == 200) {
         final apiResponse = ApiResponse.fromJson(response.data);
         if (apiResponse.status == true) {
           LoadingUtils.hideLoader();
           currentOtp.value = apiResponse.data['otp'];
-          Get.to(const VerificationScreen());
+          if(Get.arguments=="forget password")
+          {
+            Get.to(const VerificationScreen(),arguments:"forget password");
+          }else{
+            Get.to(const VerificationScreen(),arguments:"registration");
+          }
         } else {
           LoadingUtils.hideLoader();
           Fluttertoast.showToast(msg: apiResponse.message);
@@ -125,12 +140,15 @@ class SignupController extends GetxController {
       ExceptionHandler.handleError(exception);
     }
   }
-  resendSendOTP() async {
+  resendSendOTP(bool status) async {
     LoadingUtils.showLoader();
     try {
       var sendOtpResponse = await dio.post(
         URLs.sentOtp,
-        data:{"phone_number": mobileController.text.toString(),"country_code":dialCode.toString()},
+        data:{"phone_number": mobileController.text.toString(),
+          "country_code":dialCode.toString(),
+          "forgot_password":status
+        },
       );
       var sendOtpData = jsonDecode(sendOtpResponse.toString());
       if (sendOtpData["status"] == true) {

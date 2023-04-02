@@ -59,27 +59,32 @@ class _OnBoardongScreenState extends State<OnBoardongScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 20, right: 10),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Container(
-                  width: 55,
-                  decoration: const BoxDecoration(
-                    color: Color(0xffB5EBCD),
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
+            InkWell(
+              onTap:(){
+                Get.offAllNamed(MyRouter.onMobileLoginScreen);
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(top: 20, right: 10),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Container(
+                    width: 55,
+                    decoration: const BoxDecoration(
+                      color: Color(0xffB5EBCD),
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                    ),
+                    padding: const EdgeInsets.only(
+                        left: 10, right: 10, top: 5, bottom: 5),
+                    child: Text(AppStrings.onBoardingSkipButton,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.inter(
+                          textStyle: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15,
+                            color: Colors.black,
+                          ),
+                        )),
                   ),
-                  padding: const EdgeInsets.only(
-                      left: 10, right: 10, top: 5, bottom: 5),
-                  child: Text(AppStrings.onBoardingSkipButton,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.inter(
-                        textStyle: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15,
-                          color: Colors.black,
-                        ),
-                      )),
                 ),
               ),
             ),
@@ -170,7 +175,7 @@ class _OnBoardongScreenState extends State<OnBoardongScreen> {
                             text: TextSpan(
                               text: AppStrings.onBoardingTitleThree,
                               style: GoogleFonts.inter(
-                                  textStyle: TextStyle(
+                                  textStyle: const TextStyle(
                                       height: 1.3,
                                       color: Color(0xff635C5C),
                                       fontSize: 16,
@@ -207,7 +212,7 @@ class _OnBoardongScreenState extends State<OnBoardongScreen> {
                             AppStrings.onBoardingTitleFour,
                             textAlign: TextAlign.center,
                             style: GoogleFonts.inter(
-                                textStyle: TextStyle(
+                                textStyle: const TextStyle(
                                     height: 1.3,
                                     color: Color(0xff635C5C),
                                     fontSize: 16,
@@ -354,7 +359,7 @@ class OnboardContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
+        const SizedBox(
           height: 55,
         ),
         Image.asset(

@@ -8,11 +8,13 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:jv_app/app/routers/my_router.dart';
 import 'package:jv_app/resources/app_theme.dart';
+import 'package:jv_app/utils/hive_utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
-  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  await HiveUtils.init();
 
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:jv_app/app/modules/user/auth/signup/controller/new_password_controller.dart';
 import 'package:jv_app/app/modules/user/auth/signup/controller/signup_controller.dart';
 import 'package:jv_app/phone/intl_phone_field.dart';
 import 'package:jv_app/resources/app_assets.dart';
@@ -12,8 +13,8 @@ import 'package:jv_app/resources/strings.dart';
 import 'package:jv_app/utils/Validator.dart';
 import 'package:jv_app/utils/constants.dart';
 
-class SignUpScreen extends GetView<SignupController> {
-  const SignUpScreen({Key? key}) : super(key: key);
+class NewPassword extends GetView<NewPasswordController> {
+  const NewPassword({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     var deviceWidth = MediaQuery.of(context).size.width;
@@ -23,7 +24,7 @@ class SignUpScreen extends GetView<SignupController> {
         fit:StackFit.loose,
         children: [
           Container(
-            height: deviceHeight / 1.7,
+            height: deviceHeight / 1.5,
             width: deviceWidth,
             decoration: const BoxDecoration(
                 color: Colors.black,
@@ -70,7 +71,7 @@ class SignUpScreen extends GetView<SignupController> {
                   borderRadius: BorderRadius.circular(15.0),
                 ),
                 child: Container(
-                  height: deviceHeight-150,
+                  height: deviceHeight-250,
                   width: deviceWidth,
                   decoration: const BoxDecoration(
                       color: Colors.white,
@@ -83,14 +84,14 @@ class SignUpScreen extends GetView<SignupController> {
                     padding: const EdgeInsets.only(top: 40,left:20, right:20,),
                     child: SingleChildScrollView(
                       child: Form(
-                        key:controller.upKey,
+                        key:controller.newKey,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text(AppStrings.signInfo,
+                                Text("Reset Password",
                                     textAlign: TextAlign.start,
                                     style: GoogleFonts.roboto(
                                       textStyle: const TextStyle(
@@ -101,56 +102,6 @@ class SignUpScreen extends GetView<SignupController> {
                                     )),
                                 const SizedBox(
                                   height: 17,
-                                ),
-                                Row(
-                                  mainAxisSize:MainAxisSize.min,
-                                  children: [
-                                    Expanded(
-                                      child: TextFormField(
-                                        controller: controller.firstNameController,
-                                        obscureText: false,
-                                        inputFormatters: [
-                                          FilteringTextInputFormatter.allow(RegExp('[a-zA-Z]')),
-                                        ],
-                                        validator: (value){
-                                          return  Validator.validateFormField(
-                                              value!,
-                                              strErrorEmptyFirstName,
-                                              strInvalidFirstName,
-                                              Constants.NORMAL_VALIDATION);
-                                        },
-                                        keyboardType: TextInputType.name,
-                                        textInputAction: TextInputAction.done,
-                                        decoration: const InputDecoration(
-                                          hintText: 'First Name',
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width:20,),
-                                    Expanded(child:TextFormField(
-                                      controller: controller.lastNameController,
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.allow(RegExp('[a-zA-Z]')),
-                                      ],
-                                      // validator: (value){
-                                      //   return  Validator.validateFormField(
-                                      //       value!,
-                                      //       strErrorEmptyLastName,
-                                      //       strInvalidLastName,
-                                      //       Constants.NORMAL_VALIDATION);
-                                      // },
-                                      keyboardType: TextInputType.name,
-                                      textInputAction: TextInputAction.done,
-                                      obscureText: false,
-                                      decoration: const InputDecoration(
-                                        hintText: 'Last(optional)',
-                                      ),
-                                    ),)
-
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 10,
                                 ),
                                 Obx(() => TextFormField(
                                   controller: controller.passController,
@@ -189,7 +140,7 @@ class SignUpScreen extends GetView<SignupController> {
                                     if(val!.isEmpty) {
                                       return strEmptyPassword;
                                     }
-                                   else if(val != controller.passController.text) {
+                                    else if(val != controller.passController.text) {
                                       return 'Not Match';
                                     }
                                     else if(val.length < 6) {
@@ -211,62 +162,17 @@ class SignUpScreen extends GetView<SignupController> {
                                 const SizedBox(
                                   height: 10,
                                 ),
-                                TextFormField(
-                                  controller: controller.emailController,
-                                  keyboardType: TextInputType.name,
-                                  textInputAction: TextInputAction.done,
-                                  validator: (value){
-                                    return Validator.validateFormField(
-                                        value!,
-                                        strErrorEmptyEmail,
-                                        strInvalidEmail,
-                                        Constants.EMAIL_VALIDATION);
-                                  },
-                                  decoration: const InputDecoration(
-                                    hintText: 'Email(optional)',
-                                  ),
-                                ),
 
                               ],
                             ),
                             const SizedBox(height:20),
-                            InkWell(
-                              onTap:(){
-                                Get.back();
-                              },
-                              child: Text(
-                                'Login',
-                                style: GoogleFonts.roboto(
-                                    textStyle: const TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14,
-                                      color:AppColors.blackColor,
-                                    )),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            Container(
-                              padding: const EdgeInsets.only(left: 10, right: 25),
-                              child: Text(
-                                  'We will send you a verification \n code to your phone number',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.roboto(
-                                    textStyle: const TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 14,
-                                      color: Color(0xffB4B4B4),
-                                    ),
-                                  )),
-                            ),
                             const SizedBox(
                               height: 25,
                             ),
                             GestureDetector(
                               onTap: () {
-                                if(controller.upKey.currentState!.validate()){
-                                  controller.registerUser();
+                                if(controller.newKey.currentState!.validate()){
+                                  controller.forgotUser();
 
                                 }
                               },

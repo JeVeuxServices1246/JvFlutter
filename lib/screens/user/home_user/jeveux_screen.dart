@@ -11,6 +11,8 @@ import 'package:jv_app/resources/common_text.dart';
 import 'package:jv_app/resources/dimensions.dart';
 import 'package:jv_app/screens/user/widgets/row_categories.dart';
 import 'package:jv_app/screens/user/widgets/row_categories1.dart';
+import 'package:jv_app/utils/hive_utils.dart';
+import 'package:jv_app/utils/session_key.dart';
 import 'package:jv_app/utils/storage/storage_utils.dart';
 
 class JEveuxScreen extends StatefulWidget {
@@ -274,7 +276,7 @@ class _JEveuxScreenState extends State<JEveuxScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AddText(
-              text: "Hi, ${Storage.getUser().firstName ?? 'User'}",
+              text: "Hi, ${HiveUtils.getSession<String>(SessionKey.firstName)?? 'User'}",
               fontSize: 16,
               letterSpacing: 1,
               fontWeight: FontWeight.w500,

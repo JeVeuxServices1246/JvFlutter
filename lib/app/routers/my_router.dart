@@ -7,6 +7,9 @@ import 'package:jv_app/app/modules/user/auth/login/binding/login_binding.dart';
 import 'package:jv_app/app/modules/splash/views/splash_screen.dart';
 import 'package:jv_app/app/modules/user/auth/signup/binding/signup_binding.dart';
 import 'package:jv_app/app/modules/user/auth/signup/view/signup_screen.dart';
+import 'package:jv_app/app/modules/user/auth/views/mobile_number.dart';
+import 'package:jv_app/app/modules/user/auth/views/new_password.dart';
+import 'package:jv_app/app/modules/user/auth/views/new_password_binding.dart';
 import 'package:jv_app/app/modules/user/home/bindings/home_binding.dart';
 import 'package:jv_app/screens/commonscreens/welcome_screen.dart';
 import 'package:jv_app/screens/professional/drawerScreens/pbankdetails.dart';
@@ -59,6 +62,7 @@ import 'package:jv_app/screens/user/service_user/sharefeedbackuser.dart';
 import 'package:jv_app/screens/user/service_user/viewserviceuser.dart';
 import 'package:jv_app/app/modules/user/auth/views/verification_screen.dart';
 
+
 class MyRouter {
   static var splashScreen = "/splashScreen";
   static var welcomeScreen = "/welcomeScreen";
@@ -76,6 +80,8 @@ class MyRouter {
   static var referEarnScreen = "/referEarnScreen";
   static var myBookingScreen = "/myBookingScreen";
   static var notificationScreen = "/notificationScreen";
+  static var mobileNumberScreen = "/mobileNumberScreen";
+  static var newPassword = "/newPassword";
 
   static var helpScreen = "/helpScreen";
   static var supportChat = "/supportChat";
@@ -147,6 +153,16 @@ class MyRouter {
     GetPage(
         name: MyRouter.onVerificationScreen,
         page: () => const VerificationScreen(),
+        transition: Transition.fadeIn),
+    GetPage(
+        name: MyRouter.mobileNumberScreen,
+        binding: SignupBinding(),
+        page: () => const MobileNumberScreen(),
+        transition: Transition.fadeIn),
+    GetPage(
+        name: MyRouter.newPassword,
+        binding: NewpassBinding(),
+        page: () => NewPassword(),
         transition: Transition.fadeIn),
 
     GetPage(

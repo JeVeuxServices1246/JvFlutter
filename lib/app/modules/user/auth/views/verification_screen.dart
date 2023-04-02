@@ -168,6 +168,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:jv_app/app/modules/user/auth/signup/controller/signup_controller.dart';
+import 'package:jv_app/app/modules/user/auth/views/new_password.dart';
 import 'package:jv_app/app/routers/my_router.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import '../../../../../resources/app_assets.dart';
@@ -283,7 +284,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       ),
                       Align(
                         alignment: Alignment.center,
-                        child: Text("${AppStrings.titleVerificationOtp}${" "}${registrationController.dialCode}${"- "}${registrationController.mobileController.text}",
+                        child: Text("${AppStrings.titleVerificationOtp}${" "}${"+"}${registrationController.dialCode}${"- "}${registrationController.mobileController.text}",
                             textAlign: TextAlign.center,
                             style: GoogleFonts.roboto(
                               textStyle: const TextStyle(
@@ -342,7 +343,13 @@ class _VerificationScreenState extends State<VerificationScreen> {
                         crossAxisAlignment:CrossAxisAlignment.start,
                         children: [
                           InkWell(onTap:(){
-                            registrationController.resendSendOTP();
+                            if(Get.arguments=="forget password")
+                            {
+                              registrationController.resendSendOTP(true);
+                            }else{
+                              registrationController.resendSendOTP(false);
+                            }
+
                             start.value = 60;
                             startTimer();
                           },
@@ -379,13 +386,14 @@ class _VerificationScreenState extends State<VerificationScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         onPressed: () {
-                          print("otpppppppppp${registrationController.otp.value}");
-                          print("enter${registrationController.currentOtp.value}");
                           if (registrationController.otp.value.isNotEmpty) {
-                            print("jjjjj");
                             if(registrationController.otp.value.toString()==registrationController.currentOtp.value.toString()){
-                              print("match");
-                              registrationController.registerUser();
+                              if(Get.arguments=="forget password")
+                              {
+                                Get.toNamed(MyRouter.newPassword);
+                              }else{
+                                Get.toNamed(MyRouter.signupScreen);
+                              }
 
                             }else{
                               var snackBar = const SnackBar(

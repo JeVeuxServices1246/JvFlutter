@@ -9,11 +9,16 @@ import 'package:jv_app/screens/user/home_user/homeservice.dart';
 import 'package:jv_app/screens/user/home_user/jeveux_screen.dart';
 import 'package:jv_app/screens/user/personal_user/personal_user.dart';
 import 'package:jv_app/screens/user/store_user/storescreen_user.dart';
+import 'package:jv_app/utils/storage/storage_utils.dart';
+import 'package:jv_app/utils/session_key.dart';
+import 'package:jv_app/utils/hive_utils.dart';
+
 
 class HomeScreenView extends GetView<HomeController> {
   const HomeScreenView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    print(HiveUtils.getSession<String>(SessionKey.token,defaultValue:""));
     return Scaffold(
         backgroundColor: Colors.white,
         key: controller.scaffoldKey,

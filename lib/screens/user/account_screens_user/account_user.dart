@@ -5,6 +5,8 @@ import 'package:jv_app/app/routers/my_router.dart';
 import 'package:jv_app/resources/app_assets.dart';
 import 'package:jv_app/resources/poppins_common_text.dart';
 import 'package:jv_app/resources/strings.dart';
+import 'package:jv_app/utils/hive_utils.dart';
+import 'package:jv_app/utils/session_key.dart';
 import 'package:jv_app/utils/storage/storage_utils.dart';
 
 class AccountUser extends StatefulWidget {
@@ -50,7 +52,7 @@ class _AccountUserState extends State<AccountUser> {
                     children: [
                       PoppinsAddText(
                         textAlign: TextAlign.start,
-                        text: Storage.getUser().lastName ?? 'User',
+                        text: HiveUtils.getSession<String>(SessionKey.firstName)?? 'User',
                         fontSize: 17,
                         letterSpacing: 1,
                         fontWeight: FontWeight.w700,
@@ -60,7 +62,7 @@ class _AccountUserState extends State<AccountUser> {
                         height: 3,
                       ),
                       Text(
-                        Storage.getUser().phoneNumber ?? '_',
+                        HiveUtils.getSession<String>(SessionKey.phonenum) ?? '_',
                         textAlign: TextAlign.start,
                         style: TextStyle(
                             color: Colors.black,
@@ -377,6 +379,8 @@ class _AccountUserState extends State<AccountUser> {
             ),
             InkWell(
               onTap: () {
+                HiveUtils.addSession(SessionKey.isLoggedIn, false);
+                HiveUtils.clear();
                 Storage.clear();
                 Get.offAllNamed(MyRouter.onMobileLoginScreen);
               },

@@ -47,3 +47,4 @@ class StorageKeys {
   static const APP_CONFIG = 'app_config';
   static const USER = 'user';
 }
+
