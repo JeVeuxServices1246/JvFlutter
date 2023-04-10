@@ -103,7 +103,8 @@ class MobileNumberScreen extends GetView<SignupController> {
                                 ),
                                 IntlPhoneField(
                                   decoration: const InputDecoration(
-                                    labelText: 'Phone Number',
+                                      hintText: 'Phone Number',
+                                      hintStyle:TextStyle(fontSize:14)
                                   ),
                                   controller:controller.mobileController,
                                   textInputAction: TextInputAction.done,
@@ -123,17 +124,26 @@ class MobileNumberScreen extends GetView<SignupController> {
                             ),
                             const SizedBox(height:20),
                             InkWell(
-                              onTap:(){
-                                Get.back();
-                              },
-                              child: Text(
-                                'Login',
-                                style: GoogleFonts.roboto(
-                                    textStyle: const TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14,
-                                      color:AppColors.blackColor,
-                                    )),
+                              onTap: () => Get.back(),
+                              child:  Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text('have an account?',
+                                      textScaleFactor: 1,
+                                      style: GoogleFonts.poppins(
+                                          fontSize:12,
+                                          color: AppColors.textBlackColor,
+                                          fontWeight: FontWeight.w400)),
+                                  Text(
+                                    'Login',
+                                    style: GoogleFonts.roboto(
+                                        textStyle: const TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 14,
+                                          color:AppColors.blackColor,
+                                        )),
+                                  ),
+                                ],
                               ),
                             ),
                             const SizedBox(

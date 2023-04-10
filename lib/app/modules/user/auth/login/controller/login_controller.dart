@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:country_calling_code_picker/country.dart';
 import 'package:country_calling_code_picker/functions.dart';
 import 'package:dio/dio.dart';
@@ -53,19 +55,26 @@ class LoginController extends GetxController {
   }
 
   signIn() async {
-    _firebaseMessaging.getToken().then((value) {print('Token: $value'); fcm_token = '$value';});
+    final token = _firebaseMessaging.getToken().then((value) {print('Token: $value'); fcm_token = '$value';});
     try {
       LoadingUtils.showLoader();
       var response = await dio.post(
         URLs.login,
-        data:{
+        data:jsonEncode({
           "phone_number": mobileController.text.toString(),
           "password": passController.text.toString(),
-          "fcm_token":fcm_token.toString(),
+          "fcm_token":fcm_token,
           "country_code":dialCode.toString(),
 
-        }
+        })
       );
+      print( jsonEncode({
+        "phone_number": mobileController.text.toString(),
+        "password": passController.text.toString(),
+        "fcm_token":fcm_token,
+        "country_code":dialCode.toString(),
+
+      }));
       if (response.statusCode == 200) {
         ApiResponse apiResponse = ApiResponse.fromJson(response.data);
         if (apiResponse.status) {

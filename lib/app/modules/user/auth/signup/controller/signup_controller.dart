@@ -50,20 +50,21 @@ class SignupController extends GetxController {
 
   registerUser() async {
     print("hhh");
-    _firebaseMessaging.getToken().then((value) {print('Token: $value'); fcm_token = '$value';});
+    final token = _firebaseMessaging.getToken().then((value) {print('Token: $value'); fcm_token = '$value';});
     try {
       LoadingUtils.showLoader();
       print("loader");
       var response = await dio.post(URLs.registration,
-        data: {
+        data:jsonEncode({
           "phone_number":mobileController.text.toString(),
           "password":confirmPassController.text.toString(),
           "first_name":firstNameController.text.toString(),
           "last_name":lastNameController.text.isEmpty?null:lastNameController.text.toString(),
           "email":emailController.text.isEmpty?null:emailController.text.toString(),
           "country_code":dialCode.toString(),
-          "fcm_token":fcm_token.toString(),
-        },
+          "fcm_token":fcm_token,
+
+        })
       );
       if (response.statusCode == 200) {
         print("sucess");

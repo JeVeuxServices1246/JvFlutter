@@ -100,10 +100,13 @@ class UserLoginScreen extends GetView<LoginController> {
                                   height:30,
                                 ),
                                 IntlPhoneField(
+                                  textAlign:TextAlign.start,
                                   keyboardType: const TextInputType.numberWithOptions(signed: true),
                                   decoration: const InputDecoration(
-                                    labelText: 'Phone Number',
+                                    hintText: 'Phone Number',
+                                    hintStyle:TextStyle(fontSize:14)
                                   ),
+
                                   controller:controller.mobileController,
                                   textInputAction: TextInputAction.done,
                                   initialCountryCode: 'CA',
@@ -162,38 +165,39 @@ class UserLoginScreen extends GetView<LoginController> {
                                   ),
                                 ),
                                 const SizedBox(
-                                  height: 45,
+                                  height: 55,
                                 ),
                                 InkWell(
                                   onTap: () => Get.toNamed(MyRouter.mobileNumberScreen,arguments:"registration"),
-                                  child: Text(
-                                    'Registration',
-                                    style: GoogleFonts.roboto(
-                                        textStyle: const TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 14,
-                                          color: AppColors.blackColor,
-                                        )),
+                                  child:  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text('Don\'t have an account?',
+                                          textScaleFactor: 1,
+                                          style: GoogleFonts.poppins(
+                                              fontSize:12,
+                                              color: AppColors.textBlackColor,
+                                              fontWeight: FontWeight.w400)),
+                                      InkWell(
+                                        onTap: () => Get.toNamed(MyRouter.mobileNumberScreen,arguments:"registration"),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child:  Text(
+                                            'Registration',
+                                            style: GoogleFonts.roboto(
+                                                textStyle: const TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 14,
+                                                  color: AppColors.blackColor,
+                                                )),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 const SizedBox(
-                                  height: 15,
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.only(left: 10, right: 25),
-                                  child: Text(
-                                      'We will send you a verification \n code to your phone number',
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.roboto(
-                                        textStyle: const TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14,
-                                          color: Color(0xffB4B4B4),
-                                        ),
-                                      )),
-                                ),
-                                const SizedBox(
-                                  height: 25,
+                                  height:30,
                                 ),
                                 GestureDetector(
                                   onTap: () {
